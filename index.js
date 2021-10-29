@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const { MongoClient } = require('mongodb');
+const ObjectID = require('mongodb').ObjectId;
 
 const app = express()
 const port = process.env.PORT || 7000
@@ -31,6 +32,20 @@ async function run() {
             const cursor = await reviewCollection.find({})
             const reviews = await cursor.toArray();
             res.json(reviews)
+        })
+        // get site data by id
+        app.get('/site/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectID(id) }
+            const siteData = await siteCollection.findOne(query);
+            res.json(siteData)
+        })
+        // order post
+        app.post('/order', async (req, res) => {
+            const query = req.body;
+            const result = await bookedCollection.insertOne(query);
+            console.log(result)
+            res.json(result)
         })
     } finally {
 
