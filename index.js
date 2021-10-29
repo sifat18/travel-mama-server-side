@@ -18,12 +18,19 @@ async function run() {
         const database = client.db('TravelSite')
         const siteCollection = database.collection('sites')
         const bookedCollection = database.collection('book')
+        const reviewCollection = database.collection('reviews')
 
-        // get
+        // get site data
         app.get('/sites', async (req, res) => {
-            // const cursor = await siteCollection.find({})
-            // const sites = await cursor.toArray();
-            res.send('sites are here')
+            const cursor = await siteCollection.find({})
+            const sites = await cursor.toArray();
+            res.json(sites)
+        })
+        // get review  data
+        app.get('/reviews', async (req, res) => {
+            const cursor = await reviewCollection.find({})
+            const reviews = await cursor.toArray();
+            res.json(reviews)
         })
     } finally {
 
