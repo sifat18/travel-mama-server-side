@@ -17,6 +17,7 @@ async function run() {
     try {
         await client.connect()
         const database = client.db('TravelSite')
+        // creating collections
         const siteCollection = database.collection('sites')
         const bookedCollection = database.collection('book')
         const reviewCollection = database.collection('reviews')
