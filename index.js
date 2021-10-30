@@ -27,6 +27,13 @@ async function run() {
             const sites = await cursor.toArray();
             res.json(sites)
         })
+        // get order data
+        app.get('/orders', async (req, res) => {
+            console.log('insdie order')
+            const cursor = await bookedCollection.find({})
+            const order = await cursor.toArray();
+            res.json(order)
+        })
         // get review  data
         app.get('/reviews', async (req, res) => {
             const cursor = await reviewCollection.find({})
@@ -47,8 +54,40 @@ async function run() {
             console.log(result)
             res.json(result)
         })
-    } finally {
 
+        // get order by emails
+        app.get('/order/:mail', async (req, res) => {
+            const filter = req.params.mail;
+            const query = { email: filter }
+            const data = await bookedCollection.find(query).toArray();
+            res.send(data)
+        })
+
+        // delete order by emails
+        app.delete('/order/:id', async (req, res) => {
+            console.log('hitting')
+            const filter = req.params.id;
+            const query = { _id: ObjectID(filter) }
+            const data = await bookedCollection.deleteOne(query);
+            res.send(data)
+        })
+        // update by id
+        app.put('/orderUpdate/:id', async (req, res) => {
+            console.log('hitting put');
+            const msg = 'confirmed';
+            const filter = req.params.id;
+            const query = { _id: ObjectID(filter) }
+            const data = await bookedCollection.updateOne(query, {
+                $set: {
+                    orderStatus: "confirmed",
+                }
+            });
+            console.log(data)
+            res.send(data)
+        })
+
+    } finally {
+        // client.close();
     }
 }
 
