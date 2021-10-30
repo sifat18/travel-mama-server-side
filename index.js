@@ -27,18 +27,13 @@ async function run() {
             const sites = await cursor.toArray();
             res.json(sites)
         })
-        // get order data
-        app.get('/orders', async (req, res) => {
-            console.log('insdie order')
-            const cursor = await bookedCollection.find({})
-            const order = await cursor.toArray();
-            res.json(order)
-        })
-        // get review  data
-        app.get('/reviews', async (req, res) => {
-            const cursor = await reviewCollection.find({})
-            const reviews = await cursor.toArray();
-            res.json(reviews)
+        // post site data
+        app.post('/sites', async (req, res) => {
+            const data = req.body
+            const sites = await siteCollection.insertOne(data);
+            // console.log(sites);
+            // console.log(sites.acknowledged)
+            res.send(sites.acknowledged)
         })
         // get site data by id
         app.get('/site/:id', async (req, res) => {
@@ -46,6 +41,14 @@ async function run() {
             const query = { _id: ObjectID(id) }
             const siteData = await siteCollection.findOne(query);
             res.json(siteData)
+        })
+
+        // get order data
+        app.get('/orders', async (req, res) => {
+            console.log('insdie order')
+            const cursor = await bookedCollection.find({})
+            const order = await cursor.toArray();
+            res.json(order)
         })
         // order post
         app.post('/order', async (req, res) => {
@@ -84,6 +87,13 @@ async function run() {
             });
             console.log(data)
             res.send(data)
+        })
+
+        // get review  data
+        app.get('/reviews', async (req, res) => {
+            const cursor = await reviewCollection.find({})
+            const reviews = await cursor.toArray();
+            res.json(reviews)
         })
 
     } finally {
